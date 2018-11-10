@@ -12,4 +12,34 @@ golang template project for lambda and server side. The project contains followi
 For pacakges related versions (API1) it should not be used in other packages. This approach wold help isolate API package versions 
 and internal ones. 
 
+How to build and deploy.
+1. Install golang dep. 
+2. Go to template.github.com/server, running dep init. It would initialize project.
+3. Run ```dep ensure``` to download dependencies. 
+
+- For normal app server
+
+Go to /server/command, run go run server.go. It would start server at port 8000
+
+- For lambda function
+
+Go to /server/lambda, run following command:
+
+- env GOOS=linux GOARCH=amd64 go build
+- zip lambda.zip lambda
+
+Then deploy lambda.zip to your lambda function. After that you need to bind an API Gateway that proxy to your function. 
+
+How to test API:
+
+There are 2 endpoints: 
+
+- GET /api/v1/candidates/{id} 
+- POST /api/v1/candidates 
+Content-Type: application/json 
+Body: 
+{
+	"id": "123",
+	"firstName": "1234"
+}
 
