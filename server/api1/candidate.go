@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"net/http"
 
+	"github.com/go-http-utils/headers"
+
 	"github.com/gorilla/mux"
 	"template.github.com/server/api1/model"
 	"template.github.com/server/app"
@@ -13,7 +15,7 @@ var App = app.App
 
 //InitCandidate initialize handlers for candidates
 func (api *API) InitCandidate() {
-	api.BaseRoutes.Candidates.Handle("", api.APIHandler(createCandidate)).Methods("POST").HeadersRegexp("application/json")
+	api.BaseRoutes.Candidates.Handle("", api.APIHandler(createCandidate)).Methods("POST").HeadersRegexp(headers.ContentType, "application/json")
 	api.BaseRoutes.Candidate.Handle("", api.APIHandler(getCandidateByID)).Methods("GET")
 }
 
@@ -21,14 +23,12 @@ func (api *API) InitCandidate() {
 func createCandidate(ctx *Context, w http.ResponseWriter, r *http.Request) {
 	fmt.Println("calling createCandidate")
 	candidate := model.CandidateFromJSON(r.Body)
-	if candidate == nil {
-		result, error := App.Candidate.CreateCandidate(model.CandidateToInternalCandidate(candidate))
-		if error != nil {
-			HandleAPIError(model.InternalErrorToAPIError(error), w)
-		} else {
-			candidate.ID = result
-			w.Write([]byte(model.CandidateToJSON(candidate)))
-		}
+	result, error := App.Candidate.CreateCandidate(model.CandidateToInternalCandidate(candidate))
+	if error != nil {
+		HandleAPIError(model.InternalErrorToAPIError(error), w)
+	} else {
+		candidate.ID = result
+		w.Write([]byte(model.CandidateToJSON(candidate)))
 	}
 }
 
