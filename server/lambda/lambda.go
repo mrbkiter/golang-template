@@ -13,23 +13,21 @@ import (
 var initialized = false
 var muxLambda *gorillamux.GorillaMuxAdapter
 
-func Handler(req events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
+func init() {
+	rootRoute := mux.NewRouter()
+	api1.Init(rootRoute)
+	// stdout and stderr are sent to AWS CloudWatch Logs
+	log.Printf("Mux cold start")
+	muxLambda = gorillamux.New(rootRoute)
+}
 
-	if !initialized {
-		rootRoute := mux.NewRouter()
-		api1.Init(rootRoute)
-		// stdout and stderr are sent to AWS CloudWatch Logs
-		log.Printf("Mux cold start")
-		muxLambda = gorillamux.New(rootRoute)
+//RequestHandler Handler that process APIGatewayProxyRequest
+func RequestHandler(req events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
 
-		initialized = true
-	}
-
-	// If no name is provided in the HTTP request body, throw an error
 	return muxLambda.Proxy(req)
 }
 
 func main() {
 
-	lambda.Start(Handler)
+	lambda.Start(RequestHandler)
 }
