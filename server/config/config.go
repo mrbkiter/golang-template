@@ -1,8 +1,15 @@
-package app
+package config
 
 type config struct {
 	ParseConfig    *ParseConfig
 	DatabaseConfig *DatabaseConfig
+}
+
+var appConfig *config = &config{}
+
+//GetConfig Get Config Singleton
+func GetConfig() *config {
+	return appConfig
 }
 
 type ParseConfig struct {
@@ -11,7 +18,6 @@ type ParseConfig struct {
 }
 
 type DatabaseConfig struct {
-	JdbcUrl  string
-	Username string
-	Password string
+	JdbcUrl string
+	Driver  string
 }
