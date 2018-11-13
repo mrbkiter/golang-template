@@ -1,19 +1,23 @@
 package app
 
 import (
+	ctx1 "context"
 	"log"
-	"strings"
+
+	"template.github.com/server/repo"
 
 	"github.com/rs/xid"
 	"template.github.com/server/model"
 )
+
+type context = ctx1.Context
 
 //CandidateApp candidate service
 type candidateApp struct {
 }
 
 //CreateCandidate function to create candidate
-func (c *candidateApp) CreateCandidate(candidate *model.Candidate) (string, *InternalError) {
+func (c *candidateApp) CreateCandidate(ctx *context, candidate *model.Candidate) (string, *InternalError) {
 	log.Printf("CandidateApp %v\n", candidate)
 	if candidate.ID == "1234" {
 		log.Printf("error called candidate %v.", candidate)
@@ -24,10 +28,13 @@ func (c *candidateApp) CreateCandidate(candidate *model.Candidate) (string, *Int
 }
 
 //FindCandidateByID find a candidate by id. Input is candidateId (not empty)
-func (c *candidateApp) FindCandidateByID(candidateID string) (*model.Candidate, *InternalError) {
-	if candidateID == "" || strings.Compare(candidateID, "1234") == 0 {
+func (c *candidateApp) FindCandidateByID(ctx *context, candidateID string) (*model.Candidate, *InternalError) {
+	if candidateID == "" {
 		return nil, errorBuilder.BuildInternalError(ErrorCandidateNotFound, "")
 	}
-	candidate := &model.Candidate{ID: candidateID, FirstName: "First Name", LastName: "Last Name"}
+	candidate := repo.Repo().FindCandidateByID(ctx, candidateID)
+	if candidate == nil || candidate.ID == "" {
+		return nil, errorBuilder.BuildInternalError(ErrorCandidateNotFound, "")
+	}
 	return candidate, nil
 }

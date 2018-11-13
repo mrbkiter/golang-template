@@ -1,6 +1,7 @@
 package api1
 
 import (
+	ctx1 "context"
 	"net/http"
 
 	"template.github.com/server/api1/model"
@@ -42,7 +43,7 @@ func Init(root *mux.Router) *API {
 }
 
 //APIHandler handler wrapper
-func (api *API) APIHandler(h func(*Context, http.ResponseWriter, *http.Request)) http.Handler {
+func (api *API) APIHandler(h func(*context, http.ResponseWriter, *http.Request)) http.Handler {
 	return &web.Handler{
 		HandleFunc: h,
 	}
@@ -61,4 +62,4 @@ func HandleAPIError(e *model.APIError, w http.ResponseWriter) {
 
 var ReturnStatusOK = web.ReturnStatusOK
 
-type Context = web.Context
+type context = ctx1.Context

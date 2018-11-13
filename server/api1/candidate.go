@@ -20,10 +20,10 @@ func (api *API) InitCandidate() {
 }
 
 //createCandidate handler function for create candidate
-func createCandidate(ctx *Context, w http.ResponseWriter, r *http.Request) {
+func createCandidate(ctx *context, w http.ResponseWriter, r *http.Request) {
 	fmt.Println("calling createCandidate")
 	candidate := model.CandidateFromJSON(r.Body)
-	result, error := App.Candidate.CreateCandidate(model.CandidateToInternalCandidate(candidate))
+	result, error := App.Candidate.CreateCandidate(ctx, model.CandidateToInternalCandidate(candidate))
 	if error != nil {
 		HandleAPIError(model.InternalErrorToAPIError(error), w)
 	} else {
@@ -33,10 +33,10 @@ func createCandidate(ctx *Context, w http.ResponseWriter, r *http.Request) {
 }
 
 //getCandidateById handler function to get candidate by Id
-func getCandidateByID(ctx *Context, w http.ResponseWriter, r *http.Request) {
+func getCandidateByID(ctx *context, w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	candidateId := vars["candidateId"]
-	iCandidate, error := App.Candidate.FindCandidateByID(candidateId)
+	iCandidate, error := App.Candidate.FindCandidateByID(ctx, candidateId)
 	if error != nil {
 		HandleAPIError(model.InternalErrorToAPIError(error), w)
 		return

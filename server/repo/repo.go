@@ -1,7 +1,9 @@
 package repo
 
 import (
+	"context"
 	"database/sql"
+	"fmt"
 	"log"
 	"os"
 
@@ -10,17 +12,17 @@ import (
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/postgres"
 	_ "github.com/mattn/go-sqlite3"
-	"template.github.com/server/web"
 )
 
-type Repo struct{}
-
-type context = web.Context
+type Repository struct{}
 
 var driver *sql.DB
 
 var cf *config.DatabaseConfig
 
+var repo *Repository
+
+//Init initialize repository, then return Repo service
 func Init() {
 	cf = config.GetConfig().DatabaseConfig
 	if cf == nil {
@@ -36,32 +38,45 @@ func Init() {
 		initPostgres()
 		break
 	}
+	repo = &Repository{}
+}
+
+//Repo return repository object
+func Repo() *Repository {
+	if repo == nil {
+		Init()
+	}
+	return repo
+
 }
 
 //OpenConnection open a connection
-func (*Repo) OpenConnection(ctx context) *gorm.DB {
+func (*Repository) openConnection(ctx *context.Context) *gorm.DB {
 	db, _ := gorm.Open(cf.Driver, driver)
 	return db
 }
 
 //Init initialize database driver
 func initPostgres() {
+	fmt.Println(cf)
 	DB, error := sql.Open(cf.Driver, cf.JdbcUrl)
-	if error == nil {
+	if error != nil {
 		panic(error)
 	}
 	DB.SetConnMaxLifetime(60000)
 	DB.SetMaxIdleConns(30)
 	DB.SetMaxOpenConns(100)
+	driver = DB
 }
 
 //Init initialize database driver
 func initSqlLite() {
 	DB, error := sql.Open(cf.Driver, cf.JdbcUrl)
-	if error == nil {
+	if error != nil {
 		panic(error)
 	}
 	DB.SetConnMaxLifetime(60000)
 	DB.SetMaxIdleConns(30)
 	DB.SetMaxOpenConns(100)
+	driver = DB
 }
