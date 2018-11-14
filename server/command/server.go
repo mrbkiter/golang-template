@@ -27,7 +27,7 @@ func main() {
 	api1.Init(rootRoute)
 	srv := &http.Server{
 		Handler: rootRoute,
-		Addr:    ":8001",
+		Addr:    ":8000",
 		// Good practice: enforce timeouts for servers you create!
 		WriteTimeout: 15 * time.Second,
 		ReadTimeout:  15 * time.Second,

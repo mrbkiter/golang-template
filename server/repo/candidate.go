@@ -1,8 +1,6 @@
 package repo
 
 import (
-	"context"
-
 	"template.github.com/server/model"
 )
 
@@ -24,11 +22,24 @@ func (candidate *Candidate) toCandidateModel() *model.Candidate {
 	return mCandidate
 }
 
-//FindCandidateByID find candidate by id
-func (r *Repository) FindCandidateByID(ctx *context.Context, candidateID string) *model.Candidate {
+//FindCandidateByID find candidate by id. Return nil if candidate not found
+func (r *Repository) FindCandidateByID(ctx *context, candidateID string) *model.Candidate {
 	db := r.openConnection(ctx)
 	candidate := &Candidate{}
 	db.Where("id = ?", candidateID).First(candidate)
-
+	if candidate.ID == "" {
+		return nil
+	}
 	return candidate.toCandidateModel()
+}
+
+//CreateCandidate create candidate. return id if done. otherwise internal error
+func (r *Repository) CreateCandidate(ctx *context, candidate *model.Candidate) (string, *model.InternalError) {
+	//db := r.openConnection(ctx)
+	//add your code here
+
+	//check error if exists
+
+	//return
+	return "1234", nil
 }

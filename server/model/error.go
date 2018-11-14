@@ -1,4 +1,4 @@
-package app
+package model
 
 import (
 	"encoding/json"
@@ -18,13 +18,15 @@ type InternalError struct {
 	ErrorCode    ErrorCode
 }
 
-type internalErrorBuilder struct{}
+//ErrorFactory builder for app error
+type ErrorFactory struct{}
 
 func (e *InternalError) Error() string {
 	return fmt.Sprintf("internal_business_error %v", e)
 }
 
-func (ie *internalErrorBuilder) BuildInternalError(errorCode ErrorCode, msg string) *InternalError {
+//BuildInternalError construct an internal error
+func (ie *ErrorFactory) BuildInternalError(errorCode ErrorCode, msg string) *InternalError {
 	var err *InternalError
 	switch errorCode {
 	case ErrorCandidateNotFound:

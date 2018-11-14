@@ -3,7 +3,7 @@ package model
 import (
 	"encoding/json"
 
-	"template.github.com/server/app"
+	"template.github.com/server/model"
 )
 
 type ErrorCode string
@@ -19,11 +19,11 @@ type APIError struct {
 }
 
 //InternalErrorToAPIError internal error to api error
-func InternalErrorToAPIError(e *app.InternalError) *APIError {
+func InternalErrorToAPIError(e *model.InternalError) *APIError {
 	return &APIError{ErrorCode: convertErrorCode(&e.ErrorCode), ErrorMessage: &e.ErrorMessage}
 }
 
-func convertErrorCode(code *app.ErrorCode) ErrorCode {
+func convertErrorCode(code *model.ErrorCode) ErrorCode {
 	return ErrorCode(*code)
 }
 

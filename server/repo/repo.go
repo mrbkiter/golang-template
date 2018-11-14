@@ -1,9 +1,8 @@
 package repo
 
 import (
-	"context"
+	ctx1 "context"
 	"database/sql"
-	"fmt"
 	"log"
 	"os"
 
@@ -13,6 +12,8 @@ import (
 	_ "github.com/jinzhu/gorm/dialects/postgres"
 	_ "github.com/mattn/go-sqlite3"
 )
+
+type context = ctx1.Context
 
 type Repository struct{}
 
@@ -51,14 +52,14 @@ func Repo() *Repository {
 }
 
 //OpenConnection open a connection
-func (*Repository) openConnection(ctx *context.Context) *gorm.DB {
+func (*Repository) openConnection(ctx *context) *gorm.DB {
 	db, _ := gorm.Open(cf.Driver, driver)
 	return db
 }
 
 //Init initialize database driver
 func initPostgres() {
-	fmt.Println(cf)
+	//fmt.Println(cf)
 	DB, error := sql.Open(cf.Driver, cf.JdbcUrl)
 	if error != nil {
 		panic(error)

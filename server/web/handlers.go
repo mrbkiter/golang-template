@@ -25,12 +25,12 @@ type Handler struct {
 
 func (h Handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	now := time.Now()
-	c := context.Background()
+	ctx := r.Context()
 	fmt.Println(now)
 	w.Header().Add(headers.ContentType, "application/json")
 	//build context here
 	context.WithValue(r.Context(), utils.String("AAA"), utils.String("1234"))
 	//call Handler function
-	h.HandleFunc(&c, w, r)
+	h.HandleFunc(&ctx, w, r)
 	//after finish
 }
