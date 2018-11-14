@@ -17,9 +17,14 @@ How to build and deploy.
 2. Go to template.github.com/server, running ```dep init```. It would initialize project.
 3. Run ```dep ensure``` to download dependencies. 
 
+Prepare postgres db:
+1. If you look into server.go, database configuration is declared there. Please update it properly. 
+2. Create dbname as what you inputed. 
+3. Manually run script.sql in repo directory. Now you can start up your app. 
+
 - For normal app server
 
-Go to /server/command, run ```go run server.go```. It would start server at port 8000
+Go to /server/command package, run ```go run server.go```. It would start server at port 8000
 
 - For lambda function
 

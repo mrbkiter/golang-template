@@ -2,9 +2,9 @@ package main
 
 import (
 	"log"
-	"os"
 
-	"template.github.com/server/app"
+	"template.github.com/server/config"
+	"template.github.com/server/repo"
 
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
@@ -13,15 +13,21 @@ import (
 	"template.github.com/server/api1"
 )
 
-var initialized = false
 var muxLambda *gorillamux.GorillaMuxAdapter
 
 func init() {
 	rootRoute := mux.NewRouter()
 	api1.Init(rootRoute)
-	app.App.Config.DatabaseConfig = &app.DatabaseConfig{JdbcUrl: os.Getenv("JDBC_URL")}
+	dbConfig := &config.DatabaseConfig{}
+	dbConfig.Driver = "postgres"
+	dbConfig.JdbcUrl = `host=localhost port=5432 sslmode=disable 
+	dbname=testgo user=dbapplication_user password=dbapplication_user`
+	config.GetConfig().DatabaseConfig = dbConfig
+
+	//initialize repo
+	repo.Init()
 	// stdout and stderr are sent to AWS CloudWatch Logs
-	log.Printf("Mux cold start")
+	log.Printf("Mux start")
 	muxLambda = gorillamux.New(rootRoute)
 }
 
