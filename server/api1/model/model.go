@@ -2,6 +2,7 @@ package model
 
 import (
 	"encoding/json"
+	"net/http"
 
 	"template.github.com/server/model"
 )
@@ -19,8 +20,8 @@ type APIError struct {
 }
 
 //InternalErrorToAPIError internal error to api error
-func InternalErrorToAPIError(e *model.InternalError) *APIError {
-	return &APIError{ErrorCode: convertErrorCode(&e.ErrorCode), ErrorMessage: &e.ErrorMessage}
+func InternalErrorToAPIError(e *model.InternalError) (*APIError, int) {
+	return &APIError{ErrorCode: convertErrorCode(&e.ErrorCode), ErrorMessage: &e.ErrorMessage}, http.StatusBadRequest
 }
 
 func convertErrorCode(code *model.ErrorCode) ErrorCode {

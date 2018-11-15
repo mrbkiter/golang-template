@@ -25,7 +25,7 @@ func createCandidate(ctx *context, w http.ResponseWriter, r *http.Request) {
 	candidate := model.CandidateFromJSON(r.Body)
 	result, error := App.Candidate.CreateCandidate(ctx, model.CandidateToInternalCandidate(candidate))
 	if error != nil {
-		HandleAPIError(model.InternalErrorToAPIError(error), w)
+		handleAPIError(error, w)
 	} else {
 		candidate.ID = result
 		w.Write([]byte(model.CandidateToJSON(candidate)))
@@ -38,7 +38,7 @@ func getCandidateByID(ctx *context, w http.ResponseWriter, r *http.Request) {
 	candidateId := vars["candidateId"]
 	iCandidate, error := App.Candidate.FindCandidateByID(ctx, candidateId)
 	if error != nil {
-		HandleAPIError(model.InternalErrorToAPIError(error), w)
+		handleAPIError(error, w)
 		return
 	}
 	CandidateToJSON := model.CandidateToJSON(model.InternalCandidateToCandidate(iCandidate))

@@ -7,6 +7,7 @@ import (
 	"template.github.com/server/api1/model"
 
 	"github.com/gorilla/mux"
+	imodel "template.github.com/server/model"
 	"template.github.com/server/web"
 )
 
@@ -55,9 +56,10 @@ func (api *API) Handle404(w http.ResponseWriter, r *http.Request) {
 }
 
 //HandleAPIError Handle API Error
-func HandleAPIError(e *model.APIError, w http.ResponseWriter) {
-	w.WriteHeader(http.StatusBadRequest)
-	w.Write([]byte(model.APIErrorToJSON(e)))
+func handleAPIError(error *imodel.InternalError, w http.ResponseWriter) {
+	apiError, code := model.InternalErrorToAPIError(error)
+	w.WriteHeader(code)
+	w.Write([]byte(model.APIErrorToJSON(apiError)))
 }
 
 var ReturnStatusOK = web.ReturnStatusOK
