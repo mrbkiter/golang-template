@@ -9,7 +9,7 @@ golang template project for lambda and server side. The project contains followi
 - utils
 - web (contains context)
 
-For pacakges related versions (API1) it should not be used in other packages. This approach wold help isolate API package versions 
+For package related versions (API1) it should not be used in other packages. This approach helps isolate API package versions 
 and internal ones. 
 
 How to build and deploy.
